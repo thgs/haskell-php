@@ -1,0 +1,12 @@
+{
+    "name": "thgs/haskell-php",
+    "description": "Simple implementation of some Haskell functionality",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "theogpl57",
+            "email": "theogpl57@gmail.com"
+        }
+    ],
+    "require": {}
+}
