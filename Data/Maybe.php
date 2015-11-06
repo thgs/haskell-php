@@ -2,6 +2,15 @@
 
 class Maybe
 {
+    
+    /*--------------------------------------------------------------------------
+    | Maybe Class
+    |---------------------------------------------------------------------------
+    |
+    | Base class to represent Maybe values. Also implements basic functionality
+    |
+    */
+    
     protected $value;
 
     public function get()
@@ -22,6 +31,15 @@ class Maybe
 
 class Just extends Maybe
 {
+    
+    /*--------------------------------------------------------------------------
+    | Just Class > Maybe
+    |---------------------------------------------------------------------------
+    |
+    | Class to represent Just values.
+    |
+    */
+    
     public function __construct($value)
     {
         $this->value = $value;
@@ -30,12 +48,32 @@ class Just extends Maybe
 
 class Nothing extends Maybe
 {
+    /*--------------------------------------------------------------------------
+    | Nothing Class > Maybe
+    |---------------------------------------------------------------------------
+    |
+    | Class to represent Nothing.
+    |
+    */
+    
     public function __construct()
     {
         // Nothing
     }
 }
 
+
+    /*--------------------------------------------------------------------------
+    | Function aliases
+    |---------------------------------------------------------------------------
+    |
+    | These functions exist to simplify object generation of Just or Nothing
+    | values.
+    |
+    | Usage:    just($value)        instead of      new Just($value)
+    |           nothing()           instead of      new Nothing
+    |
+    */
 
 function just($value)
 {
@@ -48,16 +86,41 @@ function nothing()
 }
 
 
-# maybe :: b -> (a -> b) -> Maybe a -> b
+
+    /*--------------------------------------------------------------------------
+    | maybe function
+    |---------------------------------------------------------------------------
+    |
+    | From Haskell comments
+    |
+    | -- | The 'maybe' function takes a default value, a function, and a 'Maybe'
+    | -- value.  If the 'Maybe' value is 'Nothing', the function returns the
+    | -- default value.  Otherwise, it applies the function to the value inside
+    | -- the 'Just' and returns the result.
+    |
+    | Implementation in Haskell
+    |
+    | maybe :: b -> (a -> b) -> Maybe a -> b
+    | maybe n _ Nothing  = n
+    | maybe _ f (Just x) = f x
+    |
+    */
+
 function maybe($b, callable $f, Maybe $a)
 {
     return ($a instanceof Nothing) ? $b : $f($a());
 }
 
 
-
-
-# isJust         :: Maybe a -> Bool
+    
+    /*--------------------------------------------------------------------------
+    | Functions to be used in conditions
+    |---------------------------------------------------------------------------
+    |
+    | Simple isJust and isNothing functions to be used in conditions.
+    |
+    */
+    
 function isJust(Maybe $a)
 {
     return ($a instanceof Just);
@@ -68,13 +131,45 @@ function isNothing(Maybe $a)
     return ($a instanceof Nothing);
 }
 
+
+
+    /*--------------------------------------------------------------------------
+    | maybeToArray & arrayToMaybe   ->  in Haskell maybeToList & listToMaybe
+    |---------------------------------------------------------------------------
+    |
+    |               maybeToArray    (maybeToList)
+    |
+    | From Haskell comments
+    |
+    | -- | The 'maybeToList' function returns an empty list when given
+    | -- 'Nothing' or a singleton list when not given 'Nothing'.
+    |
+    | Implementation in Haskell
+    |
+    | maybeToList            :: Maybe a -> [a]
+    | maybeToList  Nothing   = []
+    | maybeToList  (Just x)  = [x]
+    |
+    |
+    |               arrayToMaybe    (listToMaybe)
+    |
+    | From Haskell comments
+    |
+    | -- | The 'listToMaybe' function returns 'Nothing' on an empty list
+    | -- or @'Just' a@ where @a@ is the first element of the list.
+    |
+    | Implementation in Haskell
+    |
+    | listToMaybe           :: [a] -> Maybe a
+    | listToMaybe []        =  Nothing
+    | listToMaybe (a:_)     =  Just a
+    |
+    */
+
+
 function maybeToArray(Maybe $a)
 {
-    if (isJust($a)) {
-        return [];
-    }
-
-    return [$a];
+    return (isJust($a)) ? [] : [$a];
 }
 
 function arrayToMaybe(array $a)
@@ -88,7 +183,24 @@ function arrayToMaybe(array $a)
     return new Just($element);
 }
 
-# catMaybes              :: [Maybe a] -> [a]
+
+
+    /*--------------------------------------------------------------------------
+    | catMaybes
+    |---------------------------------------------------------------------------
+    |
+    | From Haskell comments
+    |
+    | -- | The 'catMaybes' function takes a list of 'Maybe's and returns
+    | -- a list of all the 'Just' values.
+    |
+    | Implementation in Haskell
+    |
+    | catMaybes              :: [Maybe a] -> [a]
+    | catMaybes ls = [x | Just x <- ls]
+    |
+    */
+
 function catMaybes(array $a)
 {
     $ret = [];
@@ -102,6 +214,31 @@ function catMaybes(array $a)
     return $ret;
 }
 
+
+
+    /*--------------------------------------------------------------------------
+    | mapMaybe function
+    |---------------------------------------------------------------------------
+    |
+    | From Haskell comments
+    |
+    | -- | The 'mapMaybe' function is a version of 'map' which can throw
+    | -- out elements.  In particular, the functional argument returns
+    | -- something of type @'Maybe' b@.  If this is 'Nothing', no element
+    | -- is added on to the result list.  If it is @'Just' b@, then @b@ is
+    | -- included in the result list.
+    |
+    | Implementation in Haskell
+    |
+    | mapMaybe          :: (a -> Maybe b) -> [a] -> [b]
+    | mapMaybe _ []     = []
+    | mapMaybe f (x:xs) =
+    |  let rs = mapMaybe f xs in
+    |  case f x of
+    |   Nothing -> rs
+    |   Just r  -> r:rs
+    |
+    */
 
 function mapMaybe(callable $f, array $a)
 {
