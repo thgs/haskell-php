@@ -1,12 +1,87 @@
 <?php namespace thgs\HaskellPHP;
 
+/* Boolean functions */
 
 function not($b)
 {
     return (! $b);
 }
 
+
+
 define('OTHERWISE', true);
+
+
+
+/* Tuples */
+
+
+    /*--------------------------------------------------------------------------
+    | fst and snd functions
+    |---------------------------------------------------------------------------
+    |
+    |                           fst
+    |
+    | From Haskell comments
+    |
+    | -- | Extract the first component of a pair.
+    |
+    | Implementation in Haskell
+    |
+    | fst                     :: (a,b) -> a
+    | fst (x,_)               =  x
+    |
+    |                           snd
+    |
+    | From Haskell comments
+    |
+    | -- | Extract the second component of a pair.
+    |
+    | snd                     :: (a,b) -> b
+    | snd (_,y)               =  y
+    |
+    |
+    | Both fst and snd functions are implemented using array_shift in PHP,
+    | so they can be used with any kind of array representing a tuple.
+    |
+    */
+
+
+function fst($tuple)
+{
+    return array_shift($tuple);
+}
+
+function snd($tuple)
+{
+    array_shift($tuple);
+    
+    return array_shift($tuple);
+}
+
+
+    /*--------------------------------------------------------------------------
+    | curry and uncurry functions
+    |---------------------------------------------------------------------------
+    |
+    | -- | 'curry' converts an uncurried function to a curried function.
+    | curry                   :: ((a, b) -> c) -> a -> b -> c
+    | curry f x y             =  f (x, y)
+    |
+    | -- | 'uncurry' converts a curried function to a function on pairs.
+    | uncurry                 :: (a -> b -> c) -> ((a, b) -> c)
+    | uncurry f p             =  f (fst p) (snd p)
+    */
+
+function curry(callable $f, $a, $b)
+{
+    return $f([$a, $b]);
+}
+
+function uncurry(callable $f, $tuple)
+{
+    return $f($tuple);
+}
 
 
 
