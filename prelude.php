@@ -85,6 +85,40 @@ function uncurry(callable $f, $tuple)
 
 
 
+
+    /* signum */
+function signum($n)
+{
+    if ($n == 0) return 0;
+    
+    return ($n > 0) ? 1 : -1;
+}
+
+function quotRem($n, $d)
+{
+    $quot = intdiv($n, $d);
+    
+    return [$quot, $n - $quot * $d];
+}
+
+
+function logBase($a, $b)
+{
+    return log($a) / log($b);
+}
+
+function even($n)
+{
+    return (($n % 2) == 0);
+}
+
+function odd($n)
+{
+    return ! (($n % 2) == 0);
+}
+
+
+
 /* a lot more.... */
 
 
