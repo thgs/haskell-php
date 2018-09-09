@@ -1,8 +1,9 @@
-<?php namespace thgs\HaskellPHP\Data;
+<?php
+
+namespace thgs\HaskellPHP\Data;
 
 class Maybe
 {
-    
     /*--------------------------------------------------------------------------
     | Maybe Class
     |---------------------------------------------------------------------------
@@ -10,7 +11,7 @@ class Maybe
     | Base class to represent Maybe values. Also implements basic functionality
     |
     */
-    
+
     protected $value;
 
     public function get()
@@ -31,7 +32,6 @@ class Maybe
 
 class Just extends Maybe
 {
-    
     /*--------------------------------------------------------------------------
     | Just Class > Maybe
     |---------------------------------------------------------------------------
@@ -39,7 +39,7 @@ class Just extends Maybe
     | Class to represent Just values.
     |
     */
-    
+
     public function __construct($value)
     {
         $this->value = $value;
@@ -55,13 +55,12 @@ class Nothing extends Maybe
     | Class to represent Nothing.
     |
     */
-    
+
     public function __construct()
     {
         // Nothing
     }
 }
-
 
     /*--------------------------------------------------------------------------
     | Function aliases
@@ -84,8 +83,6 @@ function nothing()
 {
     return new Nothing();
 }
-
-
 
     /*--------------------------------------------------------------------------
     | maybe function
@@ -111,8 +108,6 @@ function maybe($b, callable $f, Maybe $a)
     return ($a instanceof Nothing) ? $b : $f($a());
 }
 
-
-    
     /*--------------------------------------------------------------------------
     | Functions to be used in conditions
     |---------------------------------------------------------------------------
@@ -120,18 +115,16 @@ function maybe($b, callable $f, Maybe $a)
     | Simple isJust and isNothing functions to be used in conditions.
     |
     */
-    
+
 function isJust(Maybe $a)
 {
-    return ($a instanceof Just);
+    return $a instanceof Just;
 }
 
 function isNothing(Maybe $a)
 {
-    return ($a instanceof Nothing);
+    return $a instanceof Nothing;
 }
-
-
 
     /*--------------------------------------------------------------------------
     | maybeToArray & arrayToMaybe   ->  in Haskell maybeToList & listToMaybe
@@ -166,7 +159,6 @@ function isNothing(Maybe $a)
     |
     */
 
-
 function maybeToArray(Maybe $a)
 {
     return (isJust($a)) ? [] : [$a];
@@ -182,8 +174,6 @@ function arrayToMaybe(array $a)
 
     return new Just($element);
 }
-
-
 
     /*--------------------------------------------------------------------------
     | catMaybes
@@ -214,8 +204,6 @@ function catMaybes(array $a)
     return $ret;
 }
 
-
-
     /*--------------------------------------------------------------------------
     | mapMaybe function
     |---------------------------------------------------------------------------
@@ -244,4 +232,3 @@ function mapMaybe(callable $f, array $a)
 {
     return (empty($a)) ? [] : catMaybes(array_map($f, $a));
 }
-
