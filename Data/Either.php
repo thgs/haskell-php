@@ -1,8 +1,9 @@
-<?php namespace thgs\HaskellPHP\Data;
+<?php
+
+namespace thgs\HaskellPHP\Data;
 
 class Either
 {
-        
     /*--------------------------------------------------------------------------
     | Either Class
     |---------------------------------------------------------------------------
@@ -10,24 +11,24 @@ class Either
     | Base class to represent Either type. Also implements basic functionality
     |
     */
-    
+
     protected $value;
-    
+
     public function __construct($value)
     {
         $this->value = $value;
     }
-    
+
     public function get()
     {
         return $this->value;
     }
-    
+
     public function __invoke()
     {
         return $this->value;
     }
-    
+
     public function __toString()
     {
         return get_class($this).((!is_null($this->value)) ? ' '.(string) $this->value : '');
@@ -44,14 +45,11 @@ class Either
 
 class Left extends Either
 {
-    
 }
 
 class Right extends Either
 {
-    
 }
-
 
     /*--------------------------------------------------------------------------
     | Function aliases
@@ -64,7 +62,7 @@ class Right extends Either
     |           right($value)       instead of      new Right($value)
     |
     */
-    
+
 function left($value)
 {
     return new Left($value);
@@ -75,8 +73,6 @@ function right($value)
     return new Right($value);
 }
 
-
-
     /*--------------------------------------------------------------------------
     | Functions to be used in conditions
     |---------------------------------------------------------------------------
@@ -84,19 +80,16 @@ function right($value)
     | Simple isLeft and isRight functions to be used in conditions.
     |
     */
-    
+
 function isLeft(Either $ab)
 {
-    return ($ab instanceof Left);
+    return $ab instanceof Left;
 }
 
 function isRight(Either $ab)
 {
-    return ($ab instanceof Right);
+    return $ab instanceof Right;
 }
-
-
-
 
     /*--------------------------------------------------------------------------
     | either function
@@ -118,10 +111,9 @@ function isRight(Either $ab)
 function either(callable $f, callable $g, Either $ab)
 {
     $func = (isLeft($ab)) ? $f : $g;
-    
+
     return $func($ab());
 }
-
 
     /*--------------------------------------------------------------------------
     | lefts & rights functions
@@ -156,18 +148,16 @@ function either(callable $f, callable $g, Either $ab)
 function lefts(array $a)
 {
     return array_filter($a, function ($value) {
-        return (isLeft($value));
+        return isLeft($value);
     });
 }
-
 
 function rights(array $a)
 {
     return array_filter($a, function ($value) {
-        return (isLeft($value));
+        return isLeft($value);
     });
 }
-
 
     /*--------------------------------------------------------------------------
     | partitionEithers function
@@ -179,7 +169,7 @@ function rights(array $a)
     | -- All the 'Left' elements are extracted, in order, to the first
     | -- component of the output.  Similarly the 'Right' elements are extracted
     | -- to the second component of the output.
-    |    
+    |
     | Implementation in Haskell
     |
     | partitionEithers :: [Either a b] -> ([a],[b])
@@ -194,12 +184,15 @@ function partitionEithers(array $ab)
 {
     $lefts = [];
     $rights = [];
-    
-    foreach ($ab as $element)
-    {
-        if (isLeft($element)) $lefts[] = $element();
-        if (isRight($element)) $rights[] = $element();
+
+    foreach ($ab as $element) {
+        if (isLeft($element)) {
+            $lefts[] = $element();
+        }
+        if (isRight($element)) {
+            $rights[] = $element();
+        }
     }
-    
+
     return [$lefts, $rights];
 }
